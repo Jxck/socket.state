@@ -44,10 +44,9 @@ app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 
 io.sockets.on('connection', function (socket) {
-  log('connected');
-  socket.on('msg send', function (msg) {
-    socket.emit('msg push', msg);
-    socket.broadcast.emit('msg push', msg);
+  socket.on('send id', function (id) {
+    socket.emit('push data', id);
+    socket.broadcast.emit('push data', id);
   });
   socket.on('disconnect', function() {
     log('disconnected');

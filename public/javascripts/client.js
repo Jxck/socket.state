@@ -1,28 +1,26 @@
 // Client
 var log = function(){ console.log(arguments); };
-// Client
-// var socket = io.connect('http://localhost');
+var socket = io.connect('http://localhost');
 
-// socket.on('connect', function() {
-//   log('connected');
-//   socket.emit('msg send', 'data');
-//   socket.on('msg push', function (msg) {
-//     log(msg);
-//   });
-// });
+socket.on('connect', function() {
+  log('connected');
+});
 
 $(function(){
   $('a').bind('click', function(e) {
     var id = e.target.id;
-    $('#area').load('/' + id);
+    socket.emit('send id', id);
     history.pushState(id, id, id);
     return false;
   });
 
+  socket.on('push data', function (data) {
+    $('#area').text(data);
+  });
+
   $(window).bind("popstate", function(e){
-    var id = location.pathname;
-    log(id);
+    var id = location.pathname.split('/').pop();
     if(id === '/') return false;
-    $('#area').load(id);
+    socket.emit('send id', id);
   });
 });
